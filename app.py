@@ -630,23 +630,42 @@ def take_quiz(notes_data, plans_data, quiz_data):
             if selected_subject != "All":
                 filtered_notes = [note for note in notes_data if note.get('subject', 'General') == selected_subject]
             
-            # Quiz options
-            num_questions = st.slider("Number of Questions", min_value=1, max_value=min(10, len(filtered_notes)), value=min(5, len(filtered_notes)))
-            
-            if st.button("Generate Quiz"):
-                # Generate quiz questions
-                questions = generate_quiz(filtered_notes, num_questions)
+            # Check if we have enough notes
+            if len(filtered_notes) < 1:
+                st.warning(f"No notes available for subject: {selected_subject}. Please add notes or select another subject.")
+            else:
+                # Quiz options - ensure max_value is greater than min_value
+                max_questions = max(2, min(10, len(filtered_notes)))  # At least 2
+                default_value = min(5, len(filtered_notes))
                 
-                if questions:
-                    # Store questions in session state
-                    st.session_state.quiz_questions = questions
-                    st.session_state.quiz_answers = {}
-                    st.session_state.quiz_subject = selected_subject
-                    
-                    st.success(f"Quiz generated with {len(questions)} questions!")
-                    st.rerun()
+                # Ensure default doesn't exceed max
+                default_value = min(default_value, max_questions)
+                
+                # Use a number_input instead of slider if only 1 question is possible
+                if max_questions <= 1:
+                    num_questions = 1
+                    st.info("Only 1 question possible with current notes.")
                 else:
-                    st.error("Unable to generate quiz questions. Please add more notes.")
+                    num_questions = st.slider("Number of Questions", 
+                                          min_value=1, 
+                                          max_value=max_questions, 
+                                          value=default_value)
+                
+                # Generate quiz button
+                if st.button("Generate Quiz"):
+                    # Generate quiz questions
+                    questions = generate_quiz(filtered_notes, num_questions)
+                    
+                    if questions:
+                        # Store questions in session state
+                        st.session_state.quiz_questions = questions
+                        st.session_state.quiz_answers = {}
+                        st.session_state.quiz_subject = selected_subject
+                        
+                        st.success(f"Quiz generated with {len(questions)} questions!")
+                        st.rerun()
+                    else:
+                        st.error("Unable to generate quiz questions. Please add more notes.")
             
             # Display quiz questions
             if 'quiz_questions' in st.session_state:
