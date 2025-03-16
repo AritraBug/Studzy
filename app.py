@@ -26,6 +26,7 @@ import ssl
 import certifi
 
 # Initialize NLTK resources
+# Initialize NLTK resources
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -36,6 +37,30 @@ except LookupError:
     else:
         ssl._create_default_https_context = _create_unverified_https_context
     nltk.download('punkt', quiet=True)
+
+# Add this block to download stopwords
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
+    nltk.download('stopwords', quiet=True)
+
+# Add this block to download wordnet for lemmatization
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
+    nltk.download('wordnet', quiet=True)
 
 # --- Helper Functions ---
 
