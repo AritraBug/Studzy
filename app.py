@@ -389,17 +389,17 @@ def display_dashboard(notes_data, plans_data, quiz_data):
     with col1:
         if st.button("Add New Note"):
             st.session_state.page = "Notes"
-            st.experimental_rerun()
+            st.rerun()
     
     with col2:
         if st.button("Create Study Plan"):
             st.session_state.page = "Study Plans"
-            st.experimental_rerun()
+            st.rerun()
     
     with col3:
         if st.button("Take a Quiz"):
             st.session_state.page = "Quiz"
-            st.experimental_rerun()
+            st.rerun()
 
 def manage_notes(notes_data, plans_data, quiz_data):
     """Manage notes - add, edit, delete, and view notes"""
@@ -436,14 +436,14 @@ def manage_notes(notes_data, plans_data, quiz_data):
                             st.session_state.edit_note_title = note['title']
                             st.session_state.edit_note_content = note['content']
                             st.session_state.edit_note_subject = note.get('subject', 'General')
-                            st.experimental_rerun()
+                            st.rerun()
                     
                     with col2:
                         if st.button(f"Delete", key=f"delete_{i}"):
                             notes_data.remove(note)
                             save_data(notes_data, plans_data, quiz_data)
                             st.success(f"Note '{note['title']}' deleted successfully!")
-                            st.experimental_rerun()
+                            st.rerun()
             
             # Edit note form
             if 'edit_note_id' in st.session_state:
@@ -475,7 +475,7 @@ def manage_notes(notes_data, plans_data, quiz_data):
                         del st.session_state.edit_note_content
                         del st.session_state.edit_note_subject
                         
-                        st.experimental_rerun()
+                        st.rerun()
                 
                 with col2:
                     if st.button("Cancel"):
@@ -485,7 +485,7 @@ def manage_notes(notes_data, plans_data, quiz_data):
                         del st.session_state.edit_note_content
                         del st.session_state.edit_note_subject
                         
-                        st.experimental_rerun()
+                        st.rerun()
     
     # Add Note Tab
     with tab2:
@@ -511,7 +511,7 @@ def manage_notes(notes_data, plans_data, quiz_data):
                 
                 st.success(f"Note '{note_title}' added successfully!")
                 # Clear the form
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("Please provide both a title and content for the note.")
 
@@ -566,14 +566,14 @@ def manage_study_plans(notes_data, plans_data, quiz_data):
                         
                         save_data(notes_data, plans_data, quiz_data)
                         st.success(f"Session marked as completed!")
-                        st.experimental_rerun()
+                        st.rerun()
                     
                     # Delete button
                     if st.button(f"Delete Plan", key=f"delete_plan_{i}"):
                         plans_data.remove(plan)
                         save_data(notes_data, plans_data, quiz_data)
                         st.success(f"Study plan '{plan['name']}' deleted successfully!")
-                        st.experimental_rerun()
+                        st.rerun()
     
     # Create Plan Tab
     with tab2:
@@ -606,7 +606,7 @@ def manage_study_plans(notes_data, plans_data, quiz_data):
                 
                 st.success(f"Study plan '{plan_name}' created successfully!")
                 # Clear the form
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("Please provide a name, subject, and topics for the study plan.")
 
@@ -644,7 +644,7 @@ def take_quiz(notes_data, plans_data, quiz_data):
                     st.session_state.quiz_subject = selected_subject
                     
                     st.success(f"Quiz generated with {len(questions)} questions!")
-                    st.experimental_rerun()
+                    st.rerun()
                 else:
                     st.error("Unable to generate quiz questions. Please add more notes.")
             
@@ -710,7 +710,7 @@ def take_quiz(notes_data, plans_data, quiz_data):
                     del st.session_state.quiz_subject
                     
                     st.success(f"Quiz submitted successfully! Your score: {percentage:.1f}%")
-                    st.experimental_rerun()
+                    st.rerun()
             
             # Display quiz results
             if 'quiz_result' in st.session_state:
@@ -736,7 +736,7 @@ def take_quiz(notes_data, plans_data, quiz_data):
                 if st.button("Clear Results"):
                     # Clear quiz results
                     del st.session_state.quiz_result
-                    st.experimental_rerun()
+                    st.rerun()
     
     # Quiz History Tab
     with tab2:
@@ -906,7 +906,7 @@ def settings(notes_data, plans_data, quiz_data):
                     save_data(notes_data, plans_data, quiz_data)
                     
                     st.success("Data imported successfully!")
-                    st.experimental_rerun()
+                    st.rerun()
                 else:
                     st.error("Invalid data structure in the imported file.")
         except json.JSONDecodeError:
@@ -933,7 +933,7 @@ def settings(notes_data, plans_data, quiz_data):
                 os.remove(user_info_file)
             
             st.success("All data has been reset successfully!")
-            st.experimental_rerun()
+            st.rerun()
 
 # --- Run the application ---
 
